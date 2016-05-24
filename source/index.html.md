@@ -1,14 +1,9 @@
 ---
-title: API Reference
+title: Andela API Gateway
 
 language_tabs:
+  - http
   - shell
-  - ruby
-  - python
-
-toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
   - errors
@@ -18,67 +13,32 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
-
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+Welcome to Andela's API gateway. This api gateway is the single entry point into all andela's microservices systems.
 
 # Authentication
 
-> To authorize, use this code:
+This API gateway uses JWT tokens to allow access to the API. A user receives a JWT token upon authentication through his andela google account.
 
-```ruby
-require 'kittn'
+The JWT token is expected to be included in all API requests to the API gateway in the header.
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
+`Authorization: <jwt token>`
 
-```python
-import kittn
+# Roles Microservice
+### Overview
+This microservice handles the creating, deleting, updating and fetching of Roles with respect to Andela Fellows
 
-api = kittn.authorize('meowmeowmeow')
-```
 
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
+## Get All Roles
 
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
+```http
+GET /api/v1/roles HTTP/1.1
+Accept: */*
+Authorization: <jwt token>
+Host: api-gateway.andela.com
 ```
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
+curl "GET -H 'Authorization: <jwt token>' http://api-gateway.andela.com/api/v1/roles"
 ```
 
 > The above command returns JSON structured like this:
@@ -87,57 +47,66 @@ curl "http://example.com/api/kittens"
 [
   {
     "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
+    "name": "Apprentice",
+    "level": "D1",
+    "skills": [
+      {
+        "name": "Managing expectation",
+        "description": "should be great at managing expectations"
+      },
+      {
+        "name": "stakeholder management",
+        "description": "should be proficient in stake holder management"
+      }
+    ]
   },
   {
     "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
+    "name": "Team Lead",
+    "level": "D4",
+    "skills": [
+      {
+        "name": "Managing expectation",
+        "description": "should be great at managing expectations"
+      },
+      {
+        "name": "stakeholder management",
+        "description": "should be proficient in stake holder management"
+      }
+    ]
   }
 ]
 ```
 
-This endpoint retrieves all kittens.
+This endpoint retrieves all roles.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`GET http://api-gateway.andela.com/api/v1/roles`
 
 ### Query Parameters
 
 Parameter | Default | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+page | 1 | Helps paginate the collection.
+limit | 10 | returns the first ten records of a particular page
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+Remember — this request has to be authenticated
 </aside>
 
-## Get a Specific Kitten
+## Get a Specific Role
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
+```http
+GET /api/v1/roles/<id> HTTP/1.1
+Accept: */*
+Authorization: <jwt token>
+Host: api-gateway.andela.com
 ```
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
+curl "GET -H 'Authorization: <jwt token>'
+ http://api-gateway.andela.com/api/v1/roles/<id>"
 ```
 
 > The above command returns JSON structured like this:
@@ -145,24 +114,626 @@ curl "http://example.com/api/kittens/2"
 ```json
 {
   "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "name": "Team Lead",
+  "level": "D4",
+  "skills": [
+    {
+      "name": "Managing expectation",
+      "description": "should be great at managing expectations"
+    },
+    {
+      "name": "stakeholder management",
+      "description": "should be proficient in stake holder management"
+    }
+  ]
 }
 ```
 
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+This endpoint retrieves a single role.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`GET http://api-gateway.andela.com/api/v1/roles/<id>`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to retrieve
+ID | The id of the role to be retrieved
 
+## Create A role
+
+```http
+POST /api/v1/roles HTTP/1.1
+Accept: */*
+Content-type: application/x-www-form-urlencoded
+Authorization: <jwt token>
+Host: api-gateway.andela.com
+Body: {
+  "name": <role name>,
+  "level": <fellow level>,
+  "skills": <array of skills id>
+}
+```
+
+```shell
+curl 'POST -H "Authorization: <jwt token>"
+-d {"name": <role name>, "level": <fellow level>, "skills": <array of skills id>}
+http://api-gateway.andela.com/api/v1/roles/'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": "<role id>",
+  "name": "<role name>",
+  "level": "<role level>",
+  "skills": [
+    {
+      "name": "<skill_1 name>",
+      "description": "<skill_1 description>"
+    },
+    {
+      "name": "<skill_2 name>",
+      "description": "<skill_2 description>"
+    }
+  ]
+}
+```
+
+This end point creates a new role
+
+### HTTP Request
+`POST http://api-gateway.andela.com/api/v1/roles`
+
+### Request Body
+
+title| Description
+--------- | -----------
+name | name of the role
+level | level of fellow that can be assigned to that role
+skills | Array containing the skill id's of the skills a fellow at that role should possess
+
+## Update a role
+
+This end point updates an existing role
+
+```http
+PATCH /api/v1/roles/<id> HTTP/1.1
+Accept: */*
+Content-type: application/x-www-form-urlencoded
+Authorization: <jwt token>
+Host: api-gateway.andela.com
+Body: {
+  "name": <role name>,
+  "level": <fellow level>,
+  "skills": <array of skills id>
+}
+```
+
+```shell
+curl 'PATCH -H "Authorization: <jwt token>"
+-d {"name": <role name>, "level": <fellow level>, "skills": <array of skills id>}
+http://api-gateway.andela.com/api/v1/roles/<id>'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": "<role id>",
+  "name": "<role name>",
+  "level": "<role level>",
+  "skills": [
+    {
+      "name": "<skill_1 name>",
+      "description": "<skill_1 description>"
+    },
+    {
+      "name": "<skill_2 name>",
+      "description": "<skill_2 description>"
+    }
+  ]
+}
+```
+
+### HTTP Request
+`PATCH http://api-gateway.andela.com/api/v1/roles/<id>`
+
+### Url Parameters
+Parameter | Description
+--------- | -----------------------
+id | id of the role you want to update
+
+### Request Body
+
+title| Description
+--------- | -----------
+name | name of the role
+level | level of fellow that can be assigned to that role
+skills | Array containing the skill id's of the skills a fellow at that role should possess
+
+## Delete a role
+
+This end point handles the deleting of roles
+
+```http
+DELETE /api/v1/roles/<id> HTTP/1.1
+Accept: */*
+Content-type: application/x-www-form-urlencoded
+Authorization: <jwt token>
+Host: api-gateway.andela.com
+```
+
+```shell
+curl 'DELETE -H "Authorization: <jwt token>"
+http://api-gateway.andela.com/api/v1/roles/<id>'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "message": "Role deleted"
+}
+```
+### HTTP Request
+`DELETE http://api-gateway.andela.com/api/v1/roles/<id>`
+
+### Url Parameters
+Parameter | Description
+--------- | -----------------------
+id | id of the role you want to delete
+
+#Assessment Microservice
+
+### Overview
+This microservice handles the creating, deleting, updating and fetching of Skills, Scores and Scoreguidelines for Andela fellows.
+
+## Get All Skills
+```http
+GET /api/v1/skills HTTP/1.1
+Accept: */*
+Authorization: <jwt token>
+Host: api-gateway.andela.com
+```
+
+```shell
+curl "GET -H 'Authorization: <jwt token>'
+http://api-gateway.andela.com/api/v1/skills"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Reading to be understood",
+    "type": "SOFT"
+  },
+  {
+    "id": 2,
+    "name": "Writing professionally",
+    "type": "SOFT"
+  },
+  {
+    "id": 3,
+    "name": "Managing Expectations",
+    "type": "SOFT"
+  }
+]
+```
+
+This endpoint retrieves all skills.
+
+### HTTP Request
+
+`GET http://api-gateway.andela.com/api/v1/skills`
+
+### Query Parameters
+
+Parameter | Default | Description
+--------- | ------- | -----------
+page | 1 | Helps paginate the collection.
+limit | 10 | returns the first ten records of a particular page
+
+
+## Get a Specific Skill
+
+```http
+GET /api/v1/skills/<id> HTTP/1.1
+Accept: */*
+Authorization: <jwt token>
+Host: api-gateway.andela.com
+```
+
+```shell
+curl "GET -H 'Authorization: <jwt token>'
+ http://api-gateway.andela.com/api/v1/skills/<id>"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": 5,
+  "name": "Reading to be understood",
+  "type": "SOFT"
+}
+```
+
+This endpoint retrieves a single skill.
+
+### HTTP Request
+
+`GET http://api-gateway.andela.com/api/v1/skill/<id>`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+ID | The id of the skill to be retrieved
+
+
+## Create a skill
+
+```http
+POST /api/v1/skills HTTP/1.1
+Accept: */*
+Content-type: application/x-www-form-urlencoded
+Authorization: <jwt token>
+Host: api-gateway.andela.com
+Body: {
+  "name": "<skill name>",
+  "type": "<skill type>"
+}
+```
+
+```shell
+curl 'POST -H "Authorization: <jwt token>"
+-d {"name": <skill name>, "type": <skill type>}
+http://api-gateway.andela.com/api/v1/skills/'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "name": "<skill name>",
+  "type": "<skill type>"
+}
+```
+
+This end point creates a new skill
+
+### HTTP Request
+`POST http://api-gateway.andela.com/api/v1/skills`
+
+### Request Body
+
+title| Description
+--------- | -----------
+name | name of the skill
+type | the type of skill being created (SOFT or TECH)
+
+
+## Update a skill
+
+This end point updates an existing skill
+
+```http
+PATCH /api/v1/skills/<id> HTTP/1.1
+Accept: */*
+Content-type: application/x-www-form-urlencoded
+Authorization: <jwt token>
+Host: api-gateway.andela.com
+Body: {
+  "name": <skill name>,
+  "type": <skill type>,
+}
+```
+
+```shell
+curl 'PATCH -H "Authorization: <jwt token>"
+-d {"name": <skill name>, "type": <skill type>}
+http://api-gateway.andela.com/api/v1/skills/<id>'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "name": "<skill name>",
+  "type": "<skill type>"
+}
+```
+
+### HTTP Request
+`PATCH http://api-gateway.andela.com/api/v1/skills/<id>`
+
+### Url Parameters
+Parameter | Description
+--------- | -----------------------
+id | id of the skill you want to update
+
+### Request Body
+
+title| Description
+--------- | -----------
+name | name of the skill
+type | type of skill (SOFT or TECH)
+
+## Delete a skill
+
+This end point handles the deleting of skills
+
+```http
+DELETE /api/v1/skills/<id> HTTP/1.1
+Accept: */*
+Content-type: application/x-www-form-urlencoded
+Authorization: <jwt token>
+Host: api-gateway.andela.com
+```
+
+```shell
+curl 'DELETE -H "Authorization: <jwt token>"
+http://api-gateway.andela.com/api/v1/skills/<id>'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "message": "Skill deleted"
+}
+```
+### HTTP Request
+`DELETE http://api-gateway.andela.com/api/v1/skills/<id>`
+
+### Url Parameters
+Parameter | Description
+--------- | -----------------------
+id | id of the skill you want to delete
+
+<!----- new stuff ---->
+## Get All scoreguidelines
+```http
+GET /api/v1/scoreguidelines HTTP/1.1
+Accept: */*
+Authorization: <jwt token>
+Host: api-gateway.andela.com
+```
+
+```shell
+curl "GET -H 'Authorization: <jwt token>'
+http://api-gateway.andela.com/api/v1/scoreguidelines"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+[
+
+    {
+      "id": 1,
+      "level": "D1",
+      "score": 3,
+      "description": "Fellow can do whatever",
+      "skill_id": 5,
+      "skill": {
+        "id": 5,
+        "name": "Reading to be understood",
+        "type": "SOFT"
+      }
+    }, {
+      "id": 2,
+      "level": "D0B",
+      "score": 3,
+      "description": "Fellow can do whatever",
+      "skill_id": 5,
+      "skill": {
+        "id": 5,
+        "name": "Reading to be understood",
+        "type": "SOFT"
+      }
+    }
+]
+```
+
+This endpoint retrieves all scoreguidelines.
+
+### HTTP Request
+
+`GET http://api-gateway.andela.com/api/v1/scoreguidelines`
+
+### Query Parameters
+
+Parameter | Default | Description
+--------- | ------- | -----------
+page | 1 | Helps paginate the collection.
+limit | 10 | returns the first ten records of a particular page
+
+
+## Get a Specific scoreguideline
+
+```http
+GET /api/v1/scoreguidelines/<id> HTTP/1.1
+Accept: */*
+Authorization: <jwt token>
+Host: api-gateway.andela.com
+```
+
+```shell
+curl "GET -H 'Authorization: <jwt token>'
+ http://api-gateway.andela.com/api/v1/scoreguidelines/<id>"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": 1,
+  "level": "D1",
+  "score": 3,
+  "description": "Fellow can do whatever",
+  "skill_id": 5,
+  "skill": {
+    "id": 5,
+    "name": "Reading to be understood",
+    "type": "SOFT"
+  }
+}
+```
+
+This endpoint retrieves a single score guideline.
+
+### HTTP Request
+
+`GET http://api-gateway.andela.com/api/v1/scoreguidelines/<id>`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+ID | The id of the scoreguideline to be retrieved
+
+
+## Create a scoreguideline
+
+```http
+POST /api/v1/scoreguidelines HTTP/1.1
+Accept: */*
+Content-type: application/x-www-form-urlencoded
+Authorization: <jwt token>
+Host: api-gateway.andela.com
+Body: {
+  "level": "<new level>",
+  "score": "<new score>",
+  "description": "<new description>",
+  "skill_id": "<new skill>"
+}
+```
+
+```shell
+curl 'POST -H "Authorization: <jwt token>"
+-d {level": "<new level>", "score": "<new score>",
+  "description": "<new description>",
+  "skill_id": "<new skill>"}
+http://api-gateway.andela.com/api/v1/scoreguidelines
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": 1,
+  "level": "<new level>",
+  "score": "<new score>",
+  "description": "<new description>",
+  "skill_id": "<new skill>"
+}
+```
+
+This end point creates a new score guideline.
+
+### HTTP Request
+`POST http://api-gateway.andela.com/api/v1/scoreguidelines`
+
+### Request Body
+
+title| Description
+--------- | -----------
+level | level of fellow for particular scoreguideline
+score | score for scoreguideline
+description | description of scoreguideline
+skill_id | skill id of the particular guideline
+
+
+## Update a scoreguideline
+
+This end point updates an existing score guideline
+
+```http
+PATCH /api/v1/scoreguidelines/<id> HTTP/1.1
+Accept: */*
+Content-type: application/x-www-form-urlencoded
+Authorization: <jwt token>
+Host: api-gateway.andela.com
+Body: {
+  "level": "<new level>",
+  "score": "<new score>",
+  "description": "<new description>",
+  "skill_id": "<new skill>"
+}
+```
+
+```shell
+curl 'PATCH -H "Authorization: <jwt token>"
+-d {level": "<new level>", "score": "<new score>",
+  "description": "<new description>",
+  "skill_id": "<new skill>"}
+http://api-gateway.andela.com/api/v1/scoreguidelines/<id>'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": 1,
+  "level": "<new level>",
+  "score": "<new score>",
+  "description": "<new description>",
+  "skill_id": "<new skill>"
+}
+```
+
+### HTTP Request
+`PATCH http://api-gateway.andela.com/api/v1/scoreguidelines/<id>`
+
+### Url Parameters
+Parameter | Description
+--------- | -----------------------
+id | id of the scoreguideline you want to update
+
+### Request Body
+
+title| Description
+--------- | -----------
+level | level of fellow for particular scoreguideline
+score | score for scoreguideline
+description | description of scoreguideline
+skill_id | skill id of the particular guideline
+
+## Delete a scoreguideline
+
+This end point handles the deleting of score guidelines.
+
+```http
+DELETE /api/v1/scoreguidelines/<id> HTTP/1.1
+Accept: */*
+Content-type: application/x-www-form-urlencoded
+Authorization: <jwt token>
+Host: api-gateway.andela.com
+```
+
+```shell
+curl 'DELETE -H "Authorization: <jwt token>"
+http://api-gateway.andela.com/api/v1/scoreguidelines/<id>'
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "message": "Scoreguideline deleted"
+}
+```
+### HTTP Request
+`DELETE http://api-gateway.andela.com/api/v1/scoreguidelines/<id>`
+
+### Url Parameters
+Parameter | Description
+--------- | -----------------------
+id | id of the scoreguideline you want to delete
