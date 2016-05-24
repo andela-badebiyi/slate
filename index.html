@@ -4,10 +4,8 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
+    <title>Andela API Gateway</title>
 
-    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
-    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
     <style>
       .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
@@ -88,22 +86,23 @@
   color: #90a959;
 }
     </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;]">
+  <body class="index" data-languages="[&quot;http&quot;,&quot;shell&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
-        <img src="images/navbar.png" />
+        <img style="width: 70%;" src="images/navbar.png" />
       </span>
     </a>
     <div class="tocify-wrapper">
       <img src="images/logo.png" />
         <div class="lang-selector">
+              <a href="#" data-language-name="http">http</a>
               <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -111,69 +110,35 @@
         <ul class="search-results"></ul>
       <div id="toc">
       </div>
-        <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
-        </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
         <h1 id="introduction">Introduction</h1>
 
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
-
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
-
-<p>This example API documentation page was created with <a href="https://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&rsquo;s documentation.</p>
+<p>Welcome to Andela&rsquo;s API gateway. This api gateway is the single entry point into all andela&rsquo;s microservices systems.</p>
 
 <h1 id="authentication">Authentication</h1>
 
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<p>This API gateway uses JWT tokens to allow access to the API. A user receives a JWT token upon authentication through his andela google account.</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
+<p>The JWT token is expected to be included in all API requests to the API gateway in the header.</p>
+
+<p><code class="prettyprint">Authorization: &lt;jwt token&gt;</code></p>
+
+<h1 id="roles-microservice">Roles Microservice</h1>
+
+<h3 id="overview">Overview</h3>
+
+<p>This microservice handles the creating, deleting, updating and fetching of Roles with respect to Andela Fellows</p>
+
+<h2 id="get-all-roles">Get All Roles</h2>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/api/v1/roles</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
 </code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
-
-<blockquote>
-<p>Make sure to replace <code class="prettyprint">meowmeowmeow</code> with your API key.</p>
-</blockquote>
-
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
-
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
-
-<p><code class="prettyprint">Authorization: meowmeowmeow</code></p>
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-<h1 id="kittens">Kittens</h1>
-
-<h2 id="get-all-kittens">Get All Kittens</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+<pre class="highlight shell"><code>curl <span class="s2">"GET -H 'Authorization: &lt;jwt token&gt;' http://api-gateway.andela.com/api/v1/roles"</span>
 </code></pre>
 
 <blockquote>
@@ -182,26 +147,42 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Apprentice"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"D1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"skills"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Managing expectation"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"should be great at managing expectations"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stakeholder management"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"should be proficient in stake holder management"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="p">{</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Team Lead"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"D4"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"skills"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Managing expectation"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"should be great at managing expectations"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stakeholder management"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"should be proficient in stake holder management"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves all kittens.</p>
+<p>This endpoint retrieves all roles.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">GET http://example.com/api/kittens</code></p>
+<p><code class="prettyprint">GET http://api-gateway.andela.com/api/v1/roles</code></p>
 
 <h3 id="query-parameters">Query Parameters</h3>
 
@@ -213,34 +194,29 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>page</td>
+<td>1</td>
+<td>Helps paginate the collection.</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>limit</td>
+<td>10</td>
+<td>returns the first ten records of a particular page</td>
 </tr>
 </tbody></table>
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+Remember — this request has to be authenticated
 </aside>
 
-<h2 id="get-a-specific-kitten">Get a Specific Kitten</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<h2 id="get-a-specific-role">Get a Specific Role</h2>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/api/v1/roles/&lt;id&gt;</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
 </code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+<pre class="highlight shell"><code>curl <span class="s2">"GET -H 'Authorization: &lt;jwt token&gt;'
+ http://api-gateway.andela.com/api/v1/roles/&lt;id&gt;"</span>
 </code></pre>
 
 <blockquote>
@@ -248,20 +224,26 @@ Remember — a happy kitten is an authenticated kitten!
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Team Lead"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"D4"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"skills"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Managing expectation"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"should be great at managing expectations"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stakeholder management"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"should be proficient in stake holder management"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves a specific kitten.</p>
-
-<aside class="warning">Inside HTML code blocks like this one, you can&rsquo;t use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+<p>This endpoint retrieves a single role.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">GET http://example.com/kittens/&lt;ID&gt;</code></p>
+<p><code class="prettyprint">GET http://api-gateway.andela.com/api/v1/roles/&lt;id&gt;</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -273,7 +255,744 @@ Remember — a happy kitten is an authenticated kitten!
 </thead><tbody>
 <tr>
 <td>ID</td>
-<td>The ID of the kitten to retrieve</td>
+<td>The id of the role to be retrieved</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-a-role">Create A role</h2>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/api/v1/roles</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/x-www-form-urlencoded</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
+<span class="na">Body</span><span class="p">:</span> <span class="s">{</span>
+<span class="s">  "name": &lt;role name&gt;,</span>
+<span class="s">  "level": &lt;fellow level&gt;,</span>
+<span class="s">  "skills": &lt;array of skills id&gt;</span>
+<span class="s">}</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s1">'POST -H "Authorization: &lt;jwt token&gt;"
+-d {"name": &lt;role name&gt;, "level": &lt;fellow level&gt;, "skills": &lt;array of skills id&gt;}
+http://api-gateway.andela.com/api/v1/roles/'</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;role id&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;role name&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;role level&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"skills"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;skill_1 name&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;skill_1 description&gt;"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;skill_2 name&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;skill_2 description&gt;"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This end point creates a new role</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST http://api-gateway.andela.com/api/v1/roles</code></p>
+
+<h3 id="request-body">Request Body</h3>
+
+<table><thead>
+<tr>
+<th>title</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>name of the role</td>
+</tr>
+<tr>
+<td>level</td>
+<td>level of fellow that can be assigned to that role</td>
+</tr>
+<tr>
+<td>skills</td>
+<td>Array containing the skill id&rsquo;s of the skills a fellow at that role should possess</td>
+</tr>
+</tbody></table>
+
+<h2 id="update-a-role">Update a role</h2>
+
+<p>This end point updates an existing role</p>
+<pre class="highlight http"><code><span class="nf">PATCH</span> <span class="nn">/api/v1/roles/&lt;id&gt;</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/x-www-form-urlencoded</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
+<span class="na">Body</span><span class="p">:</span> <span class="s">{</span>
+<span class="s">  "name": &lt;role name&gt;,</span>
+<span class="s">  "level": &lt;fellow level&gt;,</span>
+<span class="s">  "skills": &lt;array of skills id&gt;</span>
+<span class="s">}</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s1">'PATCH -H "Authorization: &lt;jwt token&gt;"
+-d {"name": &lt;role name&gt;, "level": &lt;fellow level&gt;, "skills": &lt;array of skills id&gt;}
+http://api-gateway.andela.com/api/v1/roles/&lt;id&gt;'</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;role id&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;role name&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;role level&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"skills"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;skill_1 name&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;skill_1 description&gt;"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;skill_2 name&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;skill_2 description&gt;"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">PATCH http://api-gateway.andela.com/api/v1/roles/&lt;id&gt;</code></p>
+
+<h3 id="url-parameters">Url Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>id of the role you want to update</td>
+</tr>
+</tbody></table>
+
+<h3 id="request-body">Request Body</h3>
+
+<table><thead>
+<tr>
+<th>title</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>name of the role</td>
+</tr>
+<tr>
+<td>level</td>
+<td>level of fellow that can be assigned to that role</td>
+</tr>
+<tr>
+<td>skills</td>
+<td>Array containing the skill id&rsquo;s of the skills a fellow at that role should possess</td>
+</tr>
+</tbody></table>
+
+<h2 id="delete-a-role">Delete a role</h2>
+
+<p>This end point handles the deleting of roles</p>
+<pre class="highlight http"><code><span class="nf">DELETE</span> <span class="nn">/api/v1/roles/&lt;id&gt;</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/x-www-form-urlencoded</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s1">'DELETE -H "Authorization: &lt;jwt token&gt;"
+http://api-gateway.andela.com/api/v1/roles/&lt;id&gt;'</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Role deleted"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">DELETE http://api-gateway.andela.com/api/v1/roles/&lt;id&gt;</code></p>
+
+<h3 id="url-parameters">Url Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>id of the role you want to delete</td>
+</tr>
+</tbody></table>
+
+<h1 id="assessment-microservice">Assessment Microservice</h1>
+
+<h3 id="overview">Overview</h3>
+
+<p>This microservice handles the creating, deleting, updating and fetching of Skills, Scores and Scoreguidelines for Andela fellows.</p>
+
+<h2 id="get-all-skills">Get All Skills</h2>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/api/v1/skills</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s2">"GET -H 'Authorization: &lt;jwt token&gt;'
+http://api-gateway.andela.com/api/v1/skills"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Reading to be understood"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SOFT"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Writing professionally"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SOFT"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Managing Expectations"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SOFT"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves all skills.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET http://api-gateway.andela.com/api/v1/skills</code></p>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>page</td>
+<td>1</td>
+<td>Helps paginate the collection.</td>
+</tr>
+<tr>
+<td>limit</td>
+<td>10</td>
+<td>returns the first ten records of a particular page</td>
+</tr>
+</tbody></table>
+
+<h2 id="get-a-specific-skill">Get a Specific Skill</h2>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/api/v1/skills/&lt;id&gt;</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s2">"GET -H 'Authorization: &lt;jwt token&gt;'
+ http://api-gateway.andela.com/api/v1/skills/&lt;id&gt;"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Reading to be understood"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SOFT"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves a single skill.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET http://api-gateway.andela.com/api/v1/skill/&lt;id&gt;</code></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>ID</td>
+<td>The id of the skill to be retrieved</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-a-skill">Create a skill</h2>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/api/v1/skills</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/x-www-form-urlencoded</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
+<span class="na">Body</span><span class="p">:</span> <span class="s">{</span>
+<span class="s">  "name": "&lt;skill name&gt;",</span>
+<span class="s">  "type": "&lt;skill type&gt;"</span>
+<span class="s">}</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s1">'POST -H "Authorization: &lt;jwt token&gt;"
+-d {"name": &lt;skill name&gt;, "type": &lt;skill type&gt;}
+http://api-gateway.andela.com/api/v1/skills/'</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;skill name&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;skill type&gt;"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This end point creates a new skill</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST http://api-gateway.andela.com/api/v1/skills</code></p>
+
+<h3 id="request-body">Request Body</h3>
+
+<table><thead>
+<tr>
+<th>title</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>name of the skill</td>
+</tr>
+<tr>
+<td>type</td>
+<td>the type of skill being created (SOFT or TECH)</td>
+</tr>
+</tbody></table>
+
+<h2 id="update-a-skill">Update a skill</h2>
+
+<p>This end point updates an existing skill</p>
+<pre class="highlight http"><code><span class="nf">PATCH</span> <span class="nn">/api/v1/skills/&lt;id&gt;</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/x-www-form-urlencoded</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
+<span class="na">Body</span><span class="p">:</span> <span class="s">{</span>
+<span class="s">  "name": &lt;skill name&gt;,</span>
+<span class="s">  "type": &lt;skill type&gt;,</span>
+<span class="s">}</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s1">'PATCH -H "Authorization: &lt;jwt token&gt;"
+-d {"name": &lt;skill name&gt;, "type": &lt;skill type&gt;}
+http://api-gateway.andela.com/api/v1/skills/&lt;id&gt;'</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;skill name&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;skill type&gt;"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">PATCH http://api-gateway.andela.com/api/v1/skills/&lt;id&gt;</code></p>
+
+<h3 id="url-parameters">Url Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>id of the skill you want to update</td>
+</tr>
+</tbody></table>
+
+<h3 id="request-body">Request Body</h3>
+
+<table><thead>
+<tr>
+<th>title</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>name of the skill</td>
+</tr>
+<tr>
+<td>type</td>
+<td>type of skill (SOFT or TECH)</td>
+</tr>
+</tbody></table>
+
+<h2 id="delete-a-skill">Delete a skill</h2>
+
+<p>This end point handles the deleting of skills</p>
+<pre class="highlight http"><code><span class="nf">DELETE</span> <span class="nn">/api/v1/skills/&lt;id&gt;</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/x-www-form-urlencoded</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s1">'DELETE -H "Authorization: &lt;jwt token&gt;"
+http://api-gateway.andela.com/api/v1/skills/&lt;id&gt;'</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Skill deleted"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">DELETE http://api-gateway.andela.com/api/v1/skills/&lt;id&gt;</code></p>
+
+<h3 id="url-parameters">Url Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>id of the skill you want to delete</td>
+</tr>
+</tbody></table>
+
+<!----- new stuff ---->
+
+<h2 id="get-all-scoreguidelines">Get All scoreguidelines</h2>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/api/v1/scoreguidelines</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s2">"GET -H 'Authorization: &lt;jwt token&gt;'
+http://api-gateway.andela.com/api/v1/scoreguidelines"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"D1"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fellow can do whatever"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"skill_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"skill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Reading to be understood"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SOFT"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"D0B"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fellow can do whatever"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"skill_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"skill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Reading to be understood"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SOFT"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves all scoreguidelines.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET http://api-gateway.andela.com/api/v1/scoreguidelines</code></p>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>page</td>
+<td>1</td>
+<td>Helps paginate the collection.</td>
+</tr>
+<tr>
+<td>limit</td>
+<td>10</td>
+<td>returns the first ten records of a particular page</td>
+</tr>
+</tbody></table>
+
+<h2 id="get-a-specific-scoreguideline">Get a Specific scoreguideline</h2>
+<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/api/v1/scoreguidelines/&lt;id&gt;</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s2">"GET -H 'Authorization: &lt;jwt token&gt;'
+ http://api-gateway.andela.com/api/v1/scoreguidelines/&lt;id&gt;"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"D1"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fellow can do whatever"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"skill_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"skill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Reading to be understood"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SOFT"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves a single score guideline.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET http://api-gateway.andela.com/api/v1/scoreguidelines/&lt;id&gt;</code></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>ID</td>
+<td>The id of the scoreguideline to be retrieved</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-a-scoreguideline">Create a scoreguideline</h2>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/api/v1/scoreguidelines</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/x-www-form-urlencoded</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
+<span class="na">Body</span><span class="p">:</span> <span class="s">{</span>
+<span class="s">  "level": "&lt;new level&gt;",</span>
+<span class="s">  "score": "&lt;new score&gt;",</span>
+<span class="s">  "description": "&lt;new description&gt;",</span>
+<span class="s">  "skill_id": "&lt;new skill&gt;"</span>
+<span class="s">}</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s1">'POST -H "Authorization: &lt;jwt token&gt;"
+-d {level": "&lt;new level&gt;", "score": "&lt;new score&gt;",
+  "description": "&lt;new description&gt;",
+  "skill_id": "&lt;new skill&gt;"}
+http://api-gateway.andela.com/api/v1/scoreguidelines
+</span></code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;new level&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;new score&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;new description&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"skill_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;new skill&gt;"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This end point creates a new score guideline.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST http://api-gateway.andela.com/api/v1/scoreguidelines</code></p>
+
+<h3 id="request-body">Request Body</h3>
+
+<table><thead>
+<tr>
+<th>title</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>level</td>
+<td>level of fellow for particular scoreguideline</td>
+</tr>
+<tr>
+<td>score</td>
+<td>score for scoreguideline</td>
+</tr>
+<tr>
+<td>description</td>
+<td>description of scoreguideline</td>
+</tr>
+<tr>
+<td>skill_id</td>
+<td>skill id of the particular guideline</td>
+</tr>
+</tbody></table>
+
+<h2 id="update-a-scoreguideline">Update a scoreguideline</h2>
+
+<p>This end point updates an existing score guideline</p>
+<pre class="highlight http"><code><span class="nf">PATCH</span> <span class="nn">/api/v1/scoreguidelines/&lt;id&gt;</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/x-www-form-urlencoded</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
+<span class="na">Body</span><span class="p">:</span> <span class="s">{</span>
+<span class="s">  "level": "&lt;new level&gt;",</span>
+<span class="s">  "score": "&lt;new score&gt;",</span>
+<span class="s">  "description": "&lt;new description&gt;",</span>
+<span class="s">  "skill_id": "&lt;new skill&gt;"</span>
+<span class="s">}</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s1">'PATCH -H "Authorization: &lt;jwt token&gt;"
+-d {level": "&lt;new level&gt;", "score": "&lt;new score&gt;",
+  "description": "&lt;new description&gt;",
+  "skill_id": "&lt;new skill&gt;"}
+http://api-gateway.andela.com/api/v1/scoreguidelines/&lt;id&gt;'</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;new level&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;new score&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;new description&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"skill_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;new skill&gt;"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">PATCH http://api-gateway.andela.com/api/v1/scoreguidelines/&lt;id&gt;</code></p>
+
+<h3 id="url-parameters">Url Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>id of the scoreguideline you want to update</td>
+</tr>
+</tbody></table>
+
+<h3 id="request-body">Request Body</h3>
+
+<table><thead>
+<tr>
+<th>title</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>level</td>
+<td>level of fellow for particular scoreguideline</td>
+</tr>
+<tr>
+<td>score</td>
+<td>score for scoreguideline</td>
+</tr>
+<tr>
+<td>description</td>
+<td>description of scoreguideline</td>
+</tr>
+<tr>
+<td>skill_id</td>
+<td>skill id of the particular guideline</td>
+</tr>
+</tbody></table>
+
+<h2 id="delete-a-scoreguideline">Delete a scoreguideline</h2>
+
+<p>This end point handles the deleting of score guidelines.</p>
+<pre class="highlight http"><code><span class="nf">DELETE</span> <span class="nn">/api/v1/scoreguidelines/&lt;id&gt;</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">*/*</span>
+<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/x-www-form-urlencoded</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">&lt;jwt token&gt;</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api-gateway.andela.com</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s1">'DELETE -H "Authorization: &lt;jwt token&gt;"
+http://api-gateway.andela.com/api/v1/scoreguidelines/&lt;id&gt;'</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Scoreguideline deleted"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">DELETE http://api-gateway.andela.com/api/v1/scoreguidelines/&lt;id&gt;</code></p>
+
+<h3 id="url-parameters">Url Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>id of the scoreguideline you want to delete</td>
 </tr>
 </tbody></table>
 
@@ -281,7 +1000,7 @@ Remember — a happy kitten is an authenticated kitten!
 
 <aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the `includes` folder and add them to the top of your `index.md`&rsquo;s frontmatter. Files are included in the order listed.</aside>
 
-<p>The Kittn API uses the following error codes:</p>
+<p>The Andela API gateway uses the following error codes:</p>
 
 <table><thead>
 <tr>
@@ -338,9 +1057,8 @@ Remember — a happy kitten is an authenticated kitten!
       </div>
       <div class="dark-box">
           <div class="lang-selector">
+                <a href="#" data-language-name="http">http</a>
                 <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
           </div>
       </div>
     </div>
